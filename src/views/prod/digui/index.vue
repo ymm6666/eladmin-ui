@@ -4,18 +4,36 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
+                  <el-select v-model="query.serialFlag" clearable filterable
+                             placeholder="请选择" style="width: 185px;" class="filter-item" @change="crud.toQuery" >
+                    <el-option
+                            v-for="item in dict.cd_serial"
+                            :key="item.id"
+                            :label="item.label"
+                            :value="item.value" />
+                  </el-select>
                 <label class="el-form-item-label">类型</label>
-                <el-input v-model="query.prodName" clearable placeholder="类型" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diguiName" clearable placeholder="类型" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">宽度</label>
-                <el-input v-model="query.prodWidth" clearable placeholder="宽度" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diguiWidth" clearable placeholder="宽度" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">深高</label>
-                <el-input v-model="query.prodDeepHight" clearable placeholder="深高" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diguiDeephight" clearable placeholder="深高" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">功能</label>
-                <el-input v-model="query.prodFunc" clearable placeholder="功能" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diguiFunc" clearable placeholder="功能" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">门板</label>
-                <el-input v-model="query.prodDoor" clearable placeholder="门板" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-                <label class="el-form-item-label">所属序列</label>
-                <el-input v-model="query.serialFlag" clearable placeholder="所属序列" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diguiDoor" clearable placeholder="门板" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <date-range-picker
+          v-model="query.diguiBaseprice"
+          start-placeholder="diguiBasepriceStart"
+          end-placeholder="diguiBasepriceStart"
+          class="date-item"
+        />
+        <date-range-picker
+          v-model="query.diguiFuncprice"
+          start-placeholder="diguiFuncpriceStart"
+          end-placeholder="diguiFuncpriceStart"
+          class="date-item"
+        />
         <rrOperation :crud="crud" />
       </div>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
@@ -23,29 +41,35 @@
       <!--表单组件-->
       <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="类型" prop="prodName">
-            <el-input v-model="form.prodName" style="width: 370px;" />
+          <el-form-item label="所属序列" prop="serialFlag">
+            <el-select v-model="form.serialFlag" filterable placeholder="请选择">
+              <el-option
+                v-for="item in dict.cd_serial"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类型" prop="diguiName">
+            <el-input v-model="form.diguiName" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="宽度">
-            <el-input v-model="form.prodWidth" style="width: 370px;" />
+            <el-input v-model="form.diguiWidth" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="深高">
-            <el-input v-model="form.prodDeepHight" style="width: 370px;" />
+            <el-input v-model="form.diguiDeephight" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="功能">
-            <el-input v-model="form.prodFunc" style="width: 370px;" />
+            <el-input v-model="form.diguiFunc" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="门板">
-            <el-input v-model="form.prodDoor" style="width: 370px;" />
+            <el-radio v-model="form.diguiDoor" v-for="item in dict.cd_class" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
           </el-form-item>
-          <el-form-item label="基础价格(JPY)">
-            <el-input v-model="form.prodBasePrice" style="width: 370px;" />
+          <el-form-item label="标准价格(JPY)">
+            <el-input v-model="form.diguiBaseprice" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="功能价格(JPY)">
-            <el-input v-model="form.prodFuncPrice" style="width: 370px;" />
-          </el-form-item>
-          <el-form-item label="所属序列" prop="serialFlag">
-            <el-input v-model="form.serialFlag" style="width: 370px;" />
+            <el-input v-model="form.diguiFuncprice" style="width: 370px;" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -56,14 +80,22 @@
       <!--表格渲染-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="prodName" label="类型" />
-        <el-table-column prop="prodWidth" label="宽度" />
-        <el-table-column prop="prodDeepHight" label="深高" />
-        <el-table-column prop="prodFunc" label="功能" />
-        <el-table-column prop="prodDoor" label="门板" />
-        <el-table-column prop="prodBasePrice" label="基础价格(JPY)" />
-        <el-table-column prop="prodFuncPrice" label="功能价格(JPY)" />
-        <el-table-column prop="serialFlag" label="所属序列" />
+        <el-table-column prop="serialFlag" label="所属序列">
+          <template slot-scope="scope">
+            {{ dict.label.cd_serial[scope.row.serialFlag] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diguiName" label="类型" />
+        <el-table-column prop="diguiWidth" label="宽度" />
+        <el-table-column prop="diguiDeephight" label="深高" />
+        <el-table-column prop="diguiFunc" label="功能" />
+        <el-table-column prop="diguiDoor" label="门板">
+          <template slot-scope="scope">
+            {{ dict.label.cd_class[scope.row.diguiDoor] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diguiBaseprice" label="标准价格(JPY)" />
+        <el-table-column prop="diguiFuncprice" label="功能价格(JPY)" />
         <el-table-column v-if="checkPer(['admin','prodDigui:edit','prodDigui:del'])" label="操作" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
@@ -87,13 +119,14 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 
-const defaultForm = { prodId: null, prodName: null, prodWidth: null, prodDeepHight: null, prodFunc: null, prodDoor: null, prodBasePrice: null, prodFuncPrice: null, serialFlag: null }
+const defaultForm = { serialFlag: null, diguiId: null, diguiName: null, diguiWidth: null, diguiDeephight: null, diguiFunc: null, diguiDoor: null, diguiBaseprice: null, diguiFuncprice: null }
 export default {
   name: 'ProdDigui',
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
+  dicts: ['cd_serial', 'cd_class'],
   cruds() {
-    return CRUD({ title: '地柜', url: 'api/prodDigui', idField: 'prodId', sort: 'prodId,desc', crudMethod: { ...crudProdDigui }})
+    return CRUD({ title: '地柜', url: 'api/prodDigui', idField: 'diguiId', sort: 'diguiId,desc', crudMethod: { ...crudProdDigui }})
   },
   data() {
     return {
@@ -103,20 +136,20 @@ export default {
         del: ['admin', 'prodDigui:del']
       },
       rules: {
-        prodName: [
-          { required: true, message: '类型不能为空', trigger: 'blur' }
-        ],
         serialFlag: [
           { required: true, message: '所属序列不能为空', trigger: 'blur' }
+        ],
+        diguiName: [
+          { required: true, message: '类型不能为空', trigger: 'blur' }
         ]
       },
       queryTypeOptions: [
-        { key: 'prodName', display_name: '类型' },
-        { key: 'prodWidth', display_name: '宽度' },
-        { key: 'prodDeepHight', display_name: '深高' },
-        { key: 'prodFunc', display_name: '功能' },
-        { key: 'prodDoor', display_name: '门板' },
-        { key: 'serialFlag', display_name: '所属序列' }
+        { key: 'serialFlag', display_name: '所属序列' },
+        { key: 'diguiName', display_name: '类型' },
+        { key: 'diguiWidth', display_name: '宽度' },
+        { key: 'diguiDeephight', display_name: '深高' },
+        { key: 'diguiFunc', display_name: '功能' },
+        { key: 'diguiDoor', display_name: '门板' }
       ]
     }
   },
