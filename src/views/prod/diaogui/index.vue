@@ -5,19 +5,33 @@
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
                 <label class="el-form-item-label">类型</label>
-                <el-input v-model="query.prodName" clearable placeholder="类型" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diaoguiName" clearable placeholder="类型" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">宽度</label>
-                <el-input v-model="query.prodWidth" clearable placeholder="宽度" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diaoguiWidth" clearable placeholder="宽度" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">深高</label>
-                <el-input v-model="query.prodDeepHight" clearable placeholder="深高" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diaoguiDeephight" clearable placeholder="深高" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">功能</label>
-                <el-input v-model="query.prodFunc" clearable placeholder="功能" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diaoguiFunc" clearable placeholder="功能" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
                 <label class="el-form-item-label">门板</label>
-                <el-input v-model="query.prodDoor" clearable placeholder="门板" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-                <label class="el-form-item-label">基础价格(JPY)</label>
-                <el-input v-model="query.prodBasePrice" clearable placeholder="基础价格(JPY)" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-                <label class="el-form-item-label">功能价格(JPY)</label>
-                <el-input v-model="query.prodFuncPrice" clearable placeholder="功能价格(JPY)" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <el-input v-model="query.diaoguiDoor" clearable placeholder="门板" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">所属序列</label>
+                <el-input v-model="query.serialFlag" clearable placeholder="所属序列" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">预留1</label>
+                <el-input v-model="query.diaoguiRemark1" clearable placeholder="预留1" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">预留2</label>
+                <el-input v-model="query.diaoguiRemark2" clearable placeholder="预留2" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <date-range-picker
+          v-model="query.diaoguiBaseprice"
+          start-placeholder="diaoguiBasepriceStart"
+          end-placeholder="diaoguiBasepriceStart"
+          class="date-item"
+        />
+        <date-range-picker
+          v-model="query.diaoguiFuncprice"
+          start-placeholder="diaoguiFuncpriceStart"
+          end-placeholder="diaoguiFuncpriceStart"
+          class="date-item"
+        />
         <rrOperation :crud="crud" />
       </div>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
@@ -25,29 +39,35 @@
       <!--表单组件-->
       <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
-          <el-form-item label="类型" prop="prodName">
-            <el-input v-model="form.prodName" style="width: 370px;" />
+          <el-form-item label="类型">
+            <el-input v-model="form.diaoguiName" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="宽度">
-            <el-input v-model="form.prodWidth" style="width: 370px;" />
+            <el-input v-model="form.diaoguiWidth" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="深高">
-            <el-input v-model="form.prodDeepHight" style="width: 370px;" />
+            <el-input v-model="form.diaoguiDeephight" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="功能">
-            <el-input v-model="form.prodFunc" style="width: 370px;" />
+            <el-input v-model="form.diaoguiFunc" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="门板">
-            <el-input v-model="form.prodDoor" style="width: 370px;" />
+            <el-input v-model="form.diaoguiDoor" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="基础价格(JPY)">
-            <el-input v-model="form.prodBasePrice" style="width: 370px;" />
+          <el-form-item label="标准价格(JPY)">
+            <el-input v-model="form.diaoguiBaseprice" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="功能价格(JPY)">
-            <el-input v-model="form.prodFuncPrice" style="width: 370px;" />
+            <el-input v-model="form.diaoguiFuncprice" style="width: 370px;" />
           </el-form-item>
           <el-form-item label="所属序列" prop="serialFlag">
             <el-input v-model="form.serialFlag" style="width: 370px;" />
+          </el-form-item>
+          <el-form-item label="预留1">
+            <el-input v-model="form.diaoguiRemark1" style="width: 370px;" />
+          </el-form-item>
+          <el-form-item label="预留2">
+            <el-input v-model="form.diaoguiRemark2" style="width: 370px;" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -58,14 +78,24 @@
       <!--表格渲染-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="prodName" label="类型" />
-        <el-table-column prop="prodWidth" label="宽度" />
-        <el-table-column prop="prodDeepHight" label="深高" />
-        <el-table-column prop="prodFunc" label="功能" />
-        <el-table-column prop="prodDoor" label="门板" />
-        <el-table-column prop="prodBasePrice" label="基础价格(JPY)" />
-        <el-table-column prop="prodFuncPrice" label="功能价格(JPY)" />
-        <el-table-column prop="serialFlag" label="所属序列" />
+        <el-table-column prop="diaoguiName" label="类型" />
+        <el-table-column prop="diaoguiWidth" label="宽度" />
+        <el-table-column prop="diaoguiDeephight" label="深高" />
+        <el-table-column prop="diaoguiFunc" label="功能" />
+        <el-table-column prop="diaoguiDoor" label="门板">
+          <template slot-scope="scope">
+            {{ dict.label.cd_class[scope.row.diaoguiDoor] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diaoguiBaseprice" label="标准价格(JPY)" />
+        <el-table-column prop="diaoguiFuncprice" label="功能价格(JPY)" />
+        <el-table-column prop="serialFlag" label="所属序列">
+          <template slot-scope="scope">
+            {{ dict.label.cd_serial[scope.row.serialFlag] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diaoguiRemark1" label="预留1" />
+        <el-table-column prop="diaoguiRemark2" label="预留2" />
         <el-table-column v-if="checkPer(['admin','prodDiaogui:edit','prodDiaogui:del'])" label="操作" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
@@ -89,13 +119,14 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 
-const defaultForm = { prodId: null, prodName: null, prodWidth: null, prodDeepHight: null, prodFunc: null, prodDoor: null, prodBasePrice: null, prodFuncPrice: null, serialFlag: null }
+const defaultForm = { diaoguiId: null, diaoguiName: null, diaoguiWidth: null, diaoguiDeephight: null, diaoguiFunc: null, diaoguiDoor: null, diaoguiBaseprice: null, diaoguiFuncprice: null, serialFlag: null, diaoguiRemark1: null, diaoguiRemark2: null }
 export default {
   name: 'ProdDiaogui',
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
+  dicts: ['cd_class', 'cd_serial'],
   cruds() {
-    return CRUD({ title: '吊柜', url: 'api/prodDiaogui', idField: 'prodId', sort: 'prodId,desc', crudMethod: { ...crudProdDiaogui }})
+    return CRUD({ title: '吊柜维护', url: 'api/prodDiaogui', idField: 'diaoguiId', sort: 'diaoguiId,desc', crudMethod: { ...crudProdDiaogui }})
   },
   data() {
     return {
@@ -105,21 +136,19 @@ export default {
         del: ['admin', 'prodDiaogui:del']
       },
       rules: {
-        prodName: [
-          { required: true, message: '类型不能为空', trigger: 'blur' }
-        ],
         serialFlag: [
           { required: true, message: '所属序列不能为空', trigger: 'blur' }
         ]
       },
       queryTypeOptions: [
-        { key: 'prodName', display_name: '类型' },
-        { key: 'prodWidth', display_name: '宽度' },
-        { key: 'prodDeepHight', display_name: '深高' },
-        { key: 'prodFunc', display_name: '功能' },
-        { key: 'prodDoor', display_name: '门板' },
-        { key: 'prodBasePrice', display_name: '基础价格(JPY)' },
-        { key: 'prodFuncPrice', display_name: '功能价格(JPY)' }
+        { key: 'diaoguiName', display_name: '类型' },
+        { key: 'diaoguiWidth', display_name: '宽度' },
+        { key: 'diaoguiDeephight', display_name: '深高' },
+        { key: 'diaoguiFunc', display_name: '功能' },
+        { key: 'diaoguiDoor', display_name: '门板' },
+        { key: 'serialFlag', display_name: '所属序列' },
+        { key: 'diaoguiRemark1', display_name: '预留1' },
+        { key: 'diaoguiRemark2', display_name: '预留2' }
       ]
     }
   },
