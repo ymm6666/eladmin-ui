@@ -2,6 +2,36 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+                <label class="el-form-item-label">类型</label>
+                <el-input v-model="query.kelinaName" clearable placeholder="类型" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">规格</label>
+                <el-input v-model="query.kelinaStyle" clearable placeholder="规格" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">水槽</label>
+                <el-input v-model="query.kelinaWatertank" clearable placeholder="水槽" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">宽深高</label>
+                <el-input v-model="query.kelinaWidthdeephight" clearable placeholder="宽深高" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">所属序列</label>
+                <el-input v-model="query.serialFlag" clearable placeholder="所属序列" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">预留1</label>
+                <el-input v-model="query.kelinaRemark1" clearable placeholder="预留1" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+                <label class="el-form-item-label">预留2</label>
+                <el-input v-model="query.kelinaRemark2" clearable placeholder="预留2" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <date-range-picker
+          v-model="query.kelinaBaseprice"
+          start-placeholder="kelinaBasepriceStart"
+          end-placeholder="kelinaBasepriceStart"
+          class="date-item"
+        />
+        <date-range-picker
+          v-model="query.kelinaFuncprice"
+          start-placeholder="kelinaFuncpriceStart"
+          end-placeholder="kelinaFuncpriceStart"
+          class="date-item"
+        />
+        <rrOperation :crud="crud" />
+      </div>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
       <crudOperation :permission="permission" />
       <!--表单组件-->
@@ -99,7 +129,17 @@ export default {
         serialFlag: [
           { required: true, message: '所属序列不能为空', trigger: 'blur' }
         ]
-      }    }
+      },
+      queryTypeOptions: [
+        { key: 'kelinaName', display_name: '类型' },
+        { key: 'kelinaStyle', display_name: '规格' },
+        { key: 'kelinaWatertank', display_name: '水槽' },
+        { key: 'kelinaWidthdeephight', display_name: '宽深高' },
+        { key: 'serialFlag', display_name: '所属序列' },
+        { key: 'kelinaRemark1', display_name: '预留1' },
+        { key: 'kelinaRemark2', display_name: '预留2' }
+      ]
+    }
   },
   methods: {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
