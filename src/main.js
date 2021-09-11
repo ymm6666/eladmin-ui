@@ -12,7 +12,7 @@ import 'mavon-editor/dist/css/index.css'
 // 数据字典
 import dict from './components/Dict'
 
-// 权限指令
+// 权限指令 1
 import checkPer from '@/utils/permission'
 import permission from './components/Permission'
 import './assets/styles/element-variables.scss'
